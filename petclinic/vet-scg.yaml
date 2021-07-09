@@ -1,0 +1,28 @@
+apiVersion: "tanzu.vmware.com/v1"
+kind: SpringCloudGatewayRouteConfig
+metadata:
+  name: vet-route-config
+  namespace: petclinic
+spec:
+  service:
+    name: spring-petclinic
+    port: 8080
+  routes:
+    - predicates:
+        - Path=/vets
+        - Method=GET
+      filters:
+        - StripPrefix=0
+      tags:
+        - vet
+---
+apiVersion: "tanzu.vmware.com/v1"
+kind: SpringCloudGatewayMapping
+metadata:
+  name: vet-routes
+  namespace: petclinic
+spec:
+  gatewayRef:
+    name: gateway-petclinic
+  routeConfigRef:
+    name: vet-route-config

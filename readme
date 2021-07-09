@@ -1,0 +1,15 @@
+tanzu cluster list
+tanzu cluster create demo --vsphere-controlplane-endpoint 192.168.1.53
+tanzu cluster kubeconfig get demo --admin
+kubectl config use-context demo-admin@demo
+tanzu cluster scale demo -w 3
+
+bash perform_ingress_install.sh
+bash perform_prom_install.sh
+bash perform_scg_install.sh
+
+kubectl config get-contexts
+kubectl config use-context  mycluster-admin@mycluster 
+helm upgrade -f api-portal-for-vmware-tanzu-1.0.1/helm/api-portal-image-values.yaml api-portal api-portal-for-vmware-tanzu-1.0.1/helm/api-portal-1.0.1.tgz -n api-portal
+
+kubectl apply -f petclinic/

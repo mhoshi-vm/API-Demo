@@ -1,0 +1,35 @@
+apiVersion: "tanzu.vmware.com/v1"
+kind: SpringCloudGatewayRouteConfig
+metadata:
+  name: visit-route-config
+  namespace: petclinic
+spec:
+  service:
+    name: spring-petclinic
+    port: 8080
+  routes:
+    - predicates:
+        - Path=/owners/*/pets/{petId}/visits/new
+        - Method=GET
+      filters:
+        - StripPrefix=0
+      tags:
+        - visit
+    - predicates:
+        - Path=/owners/*/pets/{petId}/visits/new
+        - Method=POST
+      filters:
+        - StripPrefix=0
+      tags:
+        - visit
+---
+apiVersion: "tanzu.vmware.com/v1"
+kind: SpringCloudGatewayMapping
+metadata:
+  name: visit-routes
+  namespace: petclinic
+spec:
+  gatewayRef:
+    name: gateway-petclinic
+  routeConfigRef:
+    name: visit-route-config

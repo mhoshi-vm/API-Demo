@@ -1,0 +1,38 @@
+apiVersion: "tanzu.vmware.com/v1"
+kind: SpringCloudGateway
+metadata:
+  name: gateway-petclinic
+  namespace: petclinic
+spec:
+  api:
+    serverUrl: http://petclinic.spring.online
+    title: "Petclinic Demo"
+    description: "Petclinic Demo Application"
+    documentation: "https://github.com/mhoshi-vm/spring-petclinic"
+    version: "1.0.0-K8s"
+    cors:
+      allowedOrigins:
+      - "http://api-portal.spring.animalrescue.online"
+      allowedMethods:
+      - "GET"
+      - "PUT"
+      - "POST"
+      - "DELETE"
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: scg-ingress
+  namespace:  petclinic
+spec:
+  rules:
+  - host: petclinic.spring.online
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: spring-petclinic
+            port:
+              number: 8080
